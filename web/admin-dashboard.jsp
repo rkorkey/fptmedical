@@ -11,7 +11,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
         <!-- Title -->
-        <title>Mediplus - Medical and Doctor Directory HTML Template.</title>
+        <title>Admin Dashboard</title>
 
         <!-- Favicon -->
         <link rel="icon" href="img/favicon.png">
@@ -62,63 +62,27 @@
 
 
         <link rel="stylesheet" href="#" id="colors">
-        <script>
-            window.onload = function () {
-                var table = $('#myTable').DataTable();
-                var jsonString = document.getElementById("schedules").value;
-                var schedules = JSON.parse(jsonString);
-                console.log(schedules);
-                var updateDoctorScheduleStatusEndpoint = document.getElementById("updateDoctorScheduleStatus").value;
-                for (var i = 0; i < schedules.length; i++) {
-                    var approveForm = '<form method="POST" action="' + updateDoctorScheduleStatusEndpoint + '">' +
-                            '<input type="hidden" name="id" value="' + schedules[i].id + '" />' +
-                            '<input type="hidden" value="2" name="status" />' +
-                            '<button class="btn btn-success" type="submit">Approve</button>' +
-                            '</form>';
-                    var cancelForm = '<form method="POST" action="' + updateDoctorScheduleStatusEndpoint + '">' +
-                            '<input type="hidden" name="id" value="' + schedules[i].id + '" />' +
-                            '<input type="hidden" value="1" name="status" />' +
-                            '<button class="btn btn-success" type="submit">Cancel</button>' +
-                            '</form>';
-                    table.row.add([
-                        schedules[i].doctor.name,
-                        schedules[i].startDate, 
-                        schedules[i].endDate,
-                        schedules[i].status === 0 ? 'PENDING' : schedules[i].status === 1 ? 'CANCELED' : 'APPROVED',
-                        schedules[i].status === 0 ? approveForm + cancelForm : ''
-                    ]).draw();
-                }
-            };
-        </script>
+        
+        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
         <style>
-            #team{
-                display: flex;
-            }
-
-            #myTable_wrapper{
-                left : 10%;
-            }
-
-            #myTable{
-                width: 80vw;
-            }
 
         </style>
     </head>
     <body>
         <%@include file="header.jsp" %>
-        <input  type="hidden" value="${pageContext.request.contextPath}/updateDoctorScheduleStatus" id="updateDoctorScheduleStatus" />
+        <input  type="hidden" value="${pageContext.request.contextPath}/bookingDetail" id="bookingDetail" />
+        <input  type="hidden" value="${pageContext.request.contextPath}/updateBookingStatus" id="updateBookingStatus" />
         <!-- Breadcrumbs -->
         <div class="breadcrumbs overlay">
             <div class="container">
                 <div class="bread-inner">
                     <div class="row">
                         <div class="col-12">
-                            <h2>Doctor Schedule</h2>
+                            <h2>Dashboard</h2>
                             <ul class="bread-list">
-                                <li><a href="${pageContext.request.contextPath}/HomeServlet">Home</a></li>
+                                <li><a href="#">Home</a></li>
                                 <li><i class="icofont-simple-right"></i></li>
-                                <li class="active">Doctor Schedule</li>
+                                <li class="active">Dashboard</li>
                             </ul>
                         </div>
                     </div>
@@ -129,21 +93,24 @@
 
         <!-- Start Team -->
         <section id="team" class="team section single-page">
-            <input type="hidden" value='${requestScope.schedules}' id="schedules"/>
-            <table id="myTable">
-                <thead>
-                    <tr>
-                        <th>Doctor</th>
-                        <th>Start Time</th>
-                        <th>End Time</th>
-                        <th>Status</th>
-                        <th>Action</th>
-                    </tr>
-                </thead>
-                <tbody>
-
-                </tbody>
-            </table>
+            <input type="hidden" value='${requestScope.bookings}' id="bookings"/>
+            <input type="hidden" value='${requestScope.revenues}' id="revenues" />
+            <h3>Number of bookings</h3>
+            <form action="${pageContext.request.contextPath}/dashboard" method="GET" id="form">
+                <label for="yearNumberOfBooking">Year : </label>
+                <input type="number" onchange='submitForm("form")' value="${requestScope.yearNumberOfBooking}" min="${requestScope.currentYear - 10}" max="${requestScope.currentYear}" class="form-control col-2" name="yearNumberOfBooking" id="yearNumberOfBooking" />
+            <div>
+                <canvas id="numberOfBookingChart"></canvas>
+            </div>
+        </section>
+        <section id="team" class="team section single-page">
+            <h3>Revenues By Year</h3>
+                <label for="yearRevenue">Year : </label>
+                <input type="number"  onblur='submitForm("form")' value="${requestScope.yearRevenue}" min="${requestScope.currentYear - 10}" max="${requestScope.currentYear}" class="form-control col-2" name="yearRevenue" id="yearRevenue" />
+            </form>
+            <div>
+                <canvas id="revenueChart"></canvas>
+            </div>
         </section>
         <!--/ End Team -->
 
@@ -271,6 +238,94 @@
         <script src="${pageContext.request.contextPath}/Main Template/js/main.js"></script>
         <!-- Include DataTables JS -->
         <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/2.0.1/js/dataTables.min.js"></script>
+        <script>
+            const revenueChart = document.getElementById('revenueChart');
+            const numberOfBookingChart = document.getElementById('numberOfBookingChart');
+            const yearRevenue = document.getElementById("yearRevenue").value;
+            const yearNumberOfBooking = document.getElementById("yearNumberOfBooking").value;
+            const revenuesJson = document.getElementById("revenues").value;
+            const bookingJson = document.getElementById("bookings").value;
+            const revenues = JSON.parse(revenuesJson);
+            const bookings = JSON.parse(bookingJson);
+            const labelsRevenue = [];
+            const labelsNumberOfBooking = [];
+            for(var i = 0 ; i < 12 ; i++){
+                labelsNumberOfBooking.push( (i + 1) + "/" + yearNumberOfBooking);
+                if(!revenues.hasOwnProperty( (i + 1) + '')){
+                    revenues[(i + 1) + "/" + yearRevenue] = 0;
+                }else{
+                    let value = revenues[(i + 1)];
+                    delete revenues[(i + 1)];
+                    revenues[(i + 1) + "/" + yearRevenue] = value;
+                }
+                if(!bookings.hasOwnProperty( (i + 1) + '')){
+                    bookings[(i + 1) + "/" + yearNumberOfBooking] = {};
+                }else{
+                    let value = bookings[(i + 1)];
+                    delete bookings[(i + 1)];
+                    bookings[(i + 1) + "/" + yearNumberOfBooking] = value;
+                }
+            }
+            console.log(labelsNumberOfBooking);
+            
+            new Chart(revenueChart, {
+                type: 'bar',
+                data: {
+                    datasets:  
+                        [{
+                            label: 'Revenue',
+                            data: revenues,
+                            borderWidth: 1
+                        }]
+                },
+                options: {
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+            
+            const bookingStatuses = [
+                {name : 'PENDING' , value : 0 , color : 'yellow'} ,
+                {name : 'CANCELED' , value : 1  , color : 'red'} ,
+                {name : 'APPROVED' , value : 2 , color : 'blue'} ,
+                {name : 'DONE' , value : 3 , color : 'green'} ,
+                {name : 'EXAMINING' , value : 4 , color : 'purple'}
+            ];
+            new Chart(numberOfBookingChart, {
+                        type: 'bar',
+                        data: {
+                            labels: labelsNumberOfBooking,
+                            datasets: bookingStatuses.map(status => {
+                                return {
+                                    label: status.name,
+                                    backgroundColor : status.color,
+                                    borderColor : status.color,
+                                    data: Object.values(bookings).map(booking => {
+                                        if (booking[status.value + ""] === undefined) {
+                                            return 0;
+                                        }
+                                        return booking[status.value + ""];
+                                    }) // Remove the semicolon here
+                                };
+                            })
+                        },
+                        options: {
+                            scales: {
+                                y: {
+                                    beginAtZero: true
+                                }
+                            }
+                        }
+                    });
+                    
+        function submitForm(formId){
+            console.log(formId);
+            document.getElementById(formId).submit();
+        }            
+        </script>
     </body>
 </html>
 
