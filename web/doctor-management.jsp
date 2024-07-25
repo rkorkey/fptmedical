@@ -59,66 +59,74 @@
 
         <!-- Include DataTables CSS -->
         <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/2.0.1/css/dataTables.dataTables.min.css">
-
+        <!-- SweetAlert2 CSS -->
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@10/dist/sweetalert2.min.css">
 
         <link rel="stylesheet" href="#" id="colors">
         <script>
             window.onload = function () {
                 var table = $('#myTable').DataTable();
-                var jsonString = document.getElementById("schedules").value;
-                var schedules = JSON.parse(jsonString);
-                console.log(schedules);
-                var updateDoctorScheduleStatusEndpoint = document.getElementById("updateDoctorScheduleStatus").value;
-                for (var i = 0; i < schedules.length; i++) {
-                    var approveForm = '<form method="POST" action="' + updateDoctorScheduleStatusEndpoint + '">' +
-                            '<input type="hidden" name="id" value="' + schedules[i].id + '" />' +
-                            '<input type="hidden" value="2" name="status" />' +
-                            '<button class="btn btn-success" type="submit">Approve</button>' +
-                            '</form>';
-                    var cancelForm = '<form method="POST" action="' + updateDoctorScheduleStatusEndpoint + '">' +
-                            '<input type="hidden" name="id" value="' + schedules[i].id + '" />' +
-                            '<input type="hidden" value="1" name="status" />' +
-                            '<button class="btn btn-success" type="submit">Cancel</button>' +
-                            '</form>';
+                var jsonString = document.getElementById("doctors").value;
+                var doctors = JSON.parse(jsonString);
+
+                for (var i = 0; i < doctors.length; i++) {
                     table.row.add([
-                        schedules[i].doctor.name,
-                        schedules[i].startDate, 
-                        schedules[i].endDate,
-                        schedules[i].status === 0 ? 'PENDING' : schedules[i].status === 1 ? 'CANCELED' : 'APPROVED',
-                        schedules[i].status === 0 ? approveForm + cancelForm : ''
+                        doctors[i].doctorName,
+                        doctors[i].major,
+                        doctors[i].address, // Name
+                        "<img class='image' src='" + doctors[i].avatar + "' />",
+                        doctors[i].phone,
+                        doctors[i].email
                     ]).draw();
                 }
             };
         </script>
         <style>
-            #team{
-                display: flex;
+            .image{
+                object-fit: fill;
+                width: 90px;
+                height: 90px;
             }
 
-            #myTable_wrapper{
-                left : 10%;
-            }
+
 
             #myTable{
                 width: 80vw;
             }
 
+            .button {
+                display: inline-block;
+                padding: 10px 20px; /* Adjust padding as needed */
+                background-color: #4CAF50; /* Set background color */
+                color: white !important; /* Set text color */
+                text-align: center;
+                text-decoration: none;
+                border: none;
+                border-radius: 4px; /* Optional: Add rounded corners */
+                cursor: pointer;
+                font-size: 16px; /* Adjust font size as needed */
+            }
+
+            /* Hover effect */
+            .button:hover {
+                opacity: 0.8;
+            }
         </style>
     </head>
     <body>
         <%@include file="header.jsp" %>
-        <input  type="hidden" value="${pageContext.request.contextPath}/updateDoctorScheduleStatus" id="updateDoctorScheduleStatus" />
+
         <!-- Breadcrumbs -->
         <div class="breadcrumbs overlay">
             <div class="container">
                 <div class="bread-inner">
                     <div class="row">
                         <div class="col-12">
-                            <h2>Doctor Schedule</h2>
+                            <h2>Doctor Management</h2>
                             <ul class="bread-list">
                                 <li><a href="${pageContext.request.contextPath}/HomeServlet">Home</a></li>
                                 <li><i class="icofont-simple-right"></i></li>
-                                <li class="active">Doctor Schedule</li>
+                                <li class="active">Doctor Management</li>
                             </ul>
                         </div>
                     </div>
@@ -129,23 +137,77 @@
 
         <!-- Start Team -->
         <section id="team" class="team section single-page">
-            <input type="hidden" value='${requestScope.schedules}' id="schedules"/>
+            <input type="hidden" value='${requestScope.doctors}' id="doctors"/>
             <table id="myTable">
                 <thead>
                     <tr>
                         <th>Doctor</th>
-                        <th>Start Time</th>
-                        <th>End Time</th>
-                        <th>Status</th>
-                        <th>Action</th>
+                        <th>Major</th>
+                        <th>Address</th>
+                        <th>Avatar</th>
+                        <th>Phone</th>
+                        <th>Email</th>
                     </tr>
                 </thead>
                 <tbody>
 
                 </tbody>
+                <tr style="text-align: center;">
+                    <td colspan="6" class="btn btn-default" data-toggle="modal" data-target="#addDoctorModal">Add Doctor</td>
+                </tr>
             </table>
         </section>
         <!--/ End Team -->
+        <!-- Modal -->
+        <div class="modal fade" id="addDoctorModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Add Doctor</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <form id="addDoctorForm">
+                            <div class="form-group">
+                                <label for="name">Name:</label>
+                                <input type="text" class="form-control" id="name">
+                            </div>
+                            <div class="form-group">
+                                <label for="phone">Phone:</label>
+                                <input type="text" class="form-control" id="phone">
+                            </div>
+                            <div class="form-group">
+                                <label for="email">Email:</label>
+                                <input type="email" class="form-control" id="email">
+                            </div>
+                            <div class="form-group">
+                                <label for="password">Password:</label>
+                                <input type="password" class="form-control" id="password">
+                            </div>
+                            <div class="form-group">
+                                <label for="address">Address:</label>
+                                <input type="text" class="form-control" id="address">
+                            </div>
+                            <div class="form-group">
+                                <label for="avatar">Avatar URL:</label>
+                                <input type="text" class="form-control" id="avatar">
+                            </div>
+                            <div class="form-group">
+                                <select class="form-control" id="major" name="majorId">
+                                    <option value="">Department</option>
+                                    <c:forEach items="${requestScope.majors}" var="major">
+                                        <option value="${major.id}" ${requestScope.majorId == major.id ? 'selected="selected"' : ''} > ${major.nameMajor} </option>
+                                    </c:forEach>
+                                </select>
+                            </div>
+                            <button type="submit" class="btn btn-primary">Submit</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
 
         <!-- Footer Area -->
         <footer id="footer" class="footer ">
@@ -232,6 +294,7 @@
                 </div>
             </div>
             <!--/ End Copyright -->
+            <input type="hidden" id="endPoint" value="${pageContext.request.contextPath}/createDoctor" />
         </footer>
         <!--/ End Footer Area -->
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
@@ -265,12 +328,75 @@
         <script src="${pageContext.request.contextPath}/Main Template/js/jquery.magnific-popup.min.js"></script>
         <!-- Counter Up CDN JS -->
         <script src="http://cdnjs.cloudflare.com/ajax/libs/waypoints/2.0.3/waypoints.min.js"></script>
-        <!-- Bootstrap JS -->
-        <script src="${pageContext.request.contextPath}/Main Template/js/bootstrap.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
         <!-- Main JS -->
         <script src="${pageContext.request.contextPath}/Main Template/js/main.js"></script>
+        <!-- Sweet Alert -->
+        <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
         <!-- Include DataTables JS -->
         <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/2.0.1/js/dataTables.min.js"></script>
+        <script>
+                                               document.getElementById('addDoctorForm').addEventListener('submit', function (event) {
+                                                   event.preventDefault(); // Prevent default form submission
+                                                   
+                                                   var endPoint = document.getElementById("endPoint").value;
+                                                   // Get values from the form
+                                                   var name = document.getElementById('name').value;
+                                                   var phone = document.getElementById('phone').value;
+                                                   var email = document.getElementById('email').value;
+                                                   var password = document.getElementById('password').value;
+                                                   var address = document.getElementById('address').value;
+                                                   var avatar = document.getElementById('avatar').value;
+                                                   var majorId = document.getElementById('major').value;
+
+                                                   // Create a data object with the properties
+                                                   var doctorData = {
+                                                       name: name,
+                                                       phone: phone,
+                                                       email: email,
+                                                       password: password,
+                                                       address: address,
+                                                       avatar: avatar,
+                                                       majorId: majorId
+                                                   };
+
+                                                   // Here, you would typically send this data to your server using AJAX or fetch
+                                                   // For the sake of simplicity, let's just log the data for now
+                                                   console.log("New Doctor Data:", doctorData);
+
+                                                   $.ajax({
+                                                       type: "POST",
+                                                       url: endPoint,
+                                                       data: doctorData,
+                                                       success: function (response) {
+                                                           var result = parseInt(response);
+                                                           if (result !== 0) {
+                                                               swal({
+                                                                   title: 'Success!',
+                                                                   text: 'Save successfully.',
+                                                                   icon: 'success',
+                                                                   confirmButtonText: 'Okay'
+                                                               }).then((result) => {
+                                                                   // Close the modal
+                                                                   $('#addDoctorModal').modal('hide');
+                                                                    
+                                                                   // Reset form fields
+                                                                   document.getElementById('addDoctorForm').reset();
+                                                                   window.location.reload();
+                                                               });
+                                                               return;
+                                                           }
+                                                           swal({
+                                                               title: 'Fail!',
+                                                               text: 'Something wrong happened!.',
+                                                               icon: 'error'
+                                                           })
+                                                       }
+                                                   });
+
+                                               });
+        </script>
     </body>
 </html>
 

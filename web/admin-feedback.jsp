@@ -15,7 +15,7 @@
 
         <!-- Favicon -->
         <link rel="icon" href="img/favicon.png">
-
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
         <!-- Google Fonts -->
         <link href="https://fonts.googleapis.com/css?family=Poppins:200i,300,300i,400,400i,500,500i,600,600i,700,700i,800,800i,900,900i&display=swap" rel="stylesheet">
 
@@ -65,27 +65,21 @@
         <script>
             window.onload = function () {
                 var table = $('#myTable').DataTable();
-                var jsonString = document.getElementById("schedules").value;
-                var schedules = JSON.parse(jsonString);
-                console.log(schedules);
-                var updateDoctorScheduleStatusEndpoint = document.getElementById("updateDoctorScheduleStatus").value;
-                for (var i = 0; i < schedules.length; i++) {
-                    var approveForm = '<form method="POST" action="' + updateDoctorScheduleStatusEndpoint + '">' +
-                            '<input type="hidden" name="id" value="' + schedules[i].id + '" />' +
-                            '<input type="hidden" value="2" name="status" />' +
-                            '<button class="btn btn-success" type="submit">Approve</button>' +
-                            '</form>';
-                    var cancelForm = '<form method="POST" action="' + updateDoctorScheduleStatusEndpoint + '">' +
-                            '<input type="hidden" name="id" value="' + schedules[i].id + '" />' +
-                            '<input type="hidden" value="1" name="status" />' +
-                            '<button class="btn btn-success" type="submit">Cancel</button>' +
-                            '</form>';
+                var jsonString = document.getElementById("feedbacks").value;
+                var feedbacks = JSON.parse(jsonString);
+                for (var i = 0; i < feedbacks.length; i++) {
+                    var star1 = '<span class="fa fa-star ' + (feedbacks[i].vote >= 1 ? 'checked' : '') + '" id="star-1"></span>';
+                    var star2 = '<span class="fa fa-star ' + (feedbacks[i].vote >= 2 ? 'checked' : '') + '" id="star-2"></span>';
+                    var star3 = '<span class="fa fa-star ' + (feedbacks[i].vote >= 3 ? 'checked' : '') + '" id="star-3"></span>';
+                    var star4 = '<span class="fa fa-star ' + (feedbacks[i].vote >= 4 ? 'checked' : '') + '" id="star-4"></span>';
+                    var star5 = '<span class="fa fa-star ' + (feedbacks[i].vote >= 5 ? 'checked' : '') + '" id="star-5"></span>';
+                    var starsHTML = star1 + star2 + star3 + star4 + star5;
                     table.row.add([
-                        schedules[i].doctor.name,
-                        schedules[i].startDate, 
-                        schedules[i].endDate,
-                        schedules[i].status === 0 ? 'PENDING' : schedules[i].status === 1 ? 'CANCELED' : 'APPROVED',
-                        schedules[i].status === 0 ? approveForm + cancelForm : ''
+                        feedbacks[i].doctorEmail,
+                        feedbacks[i].customerEmail,
+                        typeof feedbacks[i].createDate === 'undefined' ? 'NOT YET' : feedbacks[i].createDate, // Name
+                        feedbacks[i].content,
+                        starsHTML
                     ]).draw();
                 }
             };
@@ -102,23 +96,27 @@
             #myTable{
                 width: 80vw;
             }
+            
+            .checked{
+                color: yellow;
+            }
 
         </style>
     </head>
     <body>
         <%@include file="header.jsp" %>
-        <input  type="hidden" value="${pageContext.request.contextPath}/updateDoctorScheduleStatus" id="updateDoctorScheduleStatus" />
+        <input type="hidden" value='${requestScope.feedbacks}' id="feedbacks" />
         <!-- Breadcrumbs -->
         <div class="breadcrumbs overlay">
             <div class="container">
                 <div class="bread-inner">
                     <div class="row">
                         <div class="col-12">
-                            <h2>Doctor Schedule</h2>
+                            <h2>Feedback</h2>
                             <ul class="bread-list">
                                 <li><a href="${pageContext.request.contextPath}/HomeServlet">Home</a></li>
                                 <li><i class="icofont-simple-right"></i></li>
-                                <li class="active">Doctor Schedule</li>
+                                <li class="active">Feedback</li>
                             </ul>
                         </div>
                     </div>
@@ -129,15 +127,14 @@
 
         <!-- Start Team -->
         <section id="team" class="team section single-page">
-            <input type="hidden" value='${requestScope.schedules}' id="schedules"/>
             <table id="myTable">
                 <thead>
                     <tr>
                         <th>Doctor</th>
-                        <th>Start Time</th>
-                        <th>End Time</th>
-                        <th>Status</th>
-                        <th>Action</th>
+                        <th>Customer</th>
+                        <th>Create Date</th>
+                        <th>Comment</th>
+                        <th>Vote</th>
                     </tr>
                 </thead>
                 <tbody>

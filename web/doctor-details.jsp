@@ -15,7 +15,7 @@
 
         <!-- Favicon -->
         <link rel="icon" href="img/favicon.png">
-
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
         <!-- Google Fonts -->
         <link href="https://fonts.googleapis.com/css?family=Poppins:200i,300,300i,400,400i,500,500i,600,600i,700,700i,800,800i,900,900i&display=swap" rel="stylesheet">
 
@@ -57,68 +57,107 @@
         <!--<link rel="stylesheet" href="${pageContext.request.contextPath}/Main Template/css/color/color11.css">-->
         <!--<link rel="stylesheet" href="${pageContext.request.contextPath}/Main Template/css/color/color12.css">-->
 
-        <!-- Include DataTables CSS -->
-        <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/2.0.1/css/dataTables.dataTables.min.css">
-
-
         <link rel="stylesheet" href="#" id="colors">
-        <script>
-            window.onload = function () {
-                var table = $('#myTable').DataTable();
-                var jsonString = document.getElementById("schedules").value;
-                var schedules = JSON.parse(jsonString);
-                console.log(schedules);
-                var updateDoctorScheduleStatusEndpoint = document.getElementById("updateDoctorScheduleStatus").value;
-                for (var i = 0; i < schedules.length; i++) {
-                    var approveForm = '<form method="POST" action="' + updateDoctorScheduleStatusEndpoint + '">' +
-                            '<input type="hidden" name="id" value="' + schedules[i].id + '" />' +
-                            '<input type="hidden" value="2" name="status" />' +
-                            '<button class="btn btn-success" type="submit">Approve</button>' +
-                            '</form>';
-                    var cancelForm = '<form method="POST" action="' + updateDoctorScheduleStatusEndpoint + '">' +
-                            '<input type="hidden" name="id" value="' + schedules[i].id + '" />' +
-                            '<input type="hidden" value="1" name="status" />' +
-                            '<button class="btn btn-success" type="submit">Cancel</button>' +
-                            '</form>';
-                    table.row.add([
-                        schedules[i].doctor.name,
-                        schedules[i].startDate, 
-                        schedules[i].endDate,
-                        schedules[i].status === 0 ? 'PENDING' : schedules[i].status === 1 ? 'CANCELED' : 'APPROVED',
-                        schedules[i].status === 0 ? approveForm + cancelForm : ''
-                    ]).draw();
-                }
-            };
-        </script>
         <style>
-            #team{
+            .doctor-details-item{
+                text-align: center;
+                color: white;
+            }
+
+            .certificates-list {
                 display: flex;
+                flex-wrap: wrap;
+                flex-direction: row;
+                justify-content: space-around;
+                margin: 20px auto;
+                max-width: 1000px;
             }
 
-            #myTable_wrapper{
-                left : 10%;
+            .certificate {
+                background-color: #fff;
+                border: 1px solid #ddd;
+                border-radius: 5px;
+                box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+                padding: 20px;
+                margin: 10px;
+                width: 300px;
             }
 
-            #myTable{
-                width: 80vw;
+            .certificate-title {
+                font-size: 20px;
+                margin-top: 0;
             }
 
+            .certificate-details {
+                list-style-type: none;
+                color: black;
+                padding: 0;
+            }
+
+            .certificate-details li {
+                margin-bottom: 10px;
+            }
+
+            .certificate-details li strong {
+                margin-right: 5px;
+            }
+            
+            .checked{
+                color: yellow;
+            }
+            
+            .avatar{
+                width: 90px;
+                height: 70px;
+                border-radius: 100%;
+                object-fit: contain;
+            }
+            
+            .feedback-list{
+                display: flex;
+                flex-direction: column;
+                justify-content: space-between;
+            }
+            
+            .feedback-item{
+                border : 1px solid black;
+                border-radius: 2px;
+            }
+            
+            .feedback-header{
+                display: flex;
+                flex-direction: row;
+                justify-content: space-between;
+            }
+            
+            .feedback-body{
+                
+            }
+            
+            .feedback-header-left{
+                
+            }
+            
+            .feedback-header-right{
+                
+            }
         </style>
     </head>
     <body>
-        <%@include file="header.jsp" %>
-        <input  type="hidden" value="${pageContext.request.contextPath}/updateDoctorScheduleStatus" id="updateDoctorScheduleStatus" />
+
+        <jsp:include page="header.jsp" />
+
         <!-- Breadcrumbs -->
         <div class="breadcrumbs overlay">
             <div class="container">
                 <div class="bread-inner">
                     <div class="row">
                         <div class="col-12">
-                            <h2>Doctor Schedule</h2>
+                            <h2>Doctor Details</h2>
                             <ul class="bread-list">
                                 <li><a href="${pageContext.request.contextPath}/HomeServlet">Home</a></li>
                                 <li><i class="icofont-simple-right"></i></li>
-                                <li class="active">Doctor Schedule</li>
+                                <li class="active">Doctor Details</li>
                             </ul>
                         </div>
                     </div>
@@ -127,25 +166,79 @@
         </div>
         <!-- End Breadcrumbs -->
 
-        <!-- Start Team -->
-        <section id="team" class="team section single-page">
-            <input type="hidden" value='${requestScope.schedules}' id="schedules"/>
-            <table id="myTable">
-                <thead>
-                    <tr>
-                        <th>Doctor</th>
-                        <th>Start Time</th>
-                        <th>End Time</th>
-                        <th>Status</th>
-                        <th>Action</th>
-                    </tr>
-                </thead>
-                <tbody>
+        <!-- Doctor Details -->
+        <div class="doctor-details-area section">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-5">
+                        <div class="doctor-details-item doctor-details-left">
+                            <img src="${requestScope.doctor.avatar}" alt="#">
+                            <div class="t-icon">
+                                <a href="${pageContext.request.contextPath}/appointment?doctorId=${requestScope.doctor.doctorId}&majorId=${requestScope.doctor.majorId}" class="btn">Get Appointment</a>
+                            </div>
+                            <div class="doctor-details-contact">
+                                <h3>${doctor.doctorName}</h3>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-7">
+                        <div class="doctor-details-item">
+                            <div class="doctor-details-right">
+                                <div class="doctor-name">
+                                    <h3 class="name">${doctor.doctorName}</h3>
+                                    <p class="deg">${doctor.major}</p>
+                                </div>
+                                <br>
+                                <h2 class="certificate-title">Certificates</h2><br/>
+                                <div class="certificates-list">
+                                    <c:if test="${empty requestScope.doctor.certificates}"><p>There's no certification</p></c:if>
+                                    <c:forEach items="${requestScope.doctor.certificates}" var="certificate">
+                                        <div class="certificate">
+                                            <h3>${certificate.certificate}</h3>
+                                            <ul class="certificate-details">
+                                                <li><strong>Experience:</strong> ${certificate.experience} years</li>
+                                                <li><strong>Major:</strong> ${certificate.major.nameMajor}</li>
+                                                <li><strong>University:</strong> University of ${certificate.university}</li>
+                                                <li><strong>Address:</strong> ${certificate.address}</li>
+                                            </ul>
+                                        </div>
+                                    </c:forEach>
+                                </div>
 
-                </tbody>
-            </table>
-        </section>
-        <!--/ End Team -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                                    <div class="row feedback-list">
+                                    <h2>Feedbacks</h2>
+                                    <c:if test="${empty requestScope.feedbacks}">There's no feedback</c:if>
+                                    <c:forEach items="${requestScope.feedbacks}" var="feedback">
+                                        <div class="feedback-item">
+                                            <div class="feedback-header">
+                                                <div class="feedback-header-left">
+                                                    <img src="${feedback.customerAvatar}" alt="avatar of customer" class="avatar"/>
+                                                    <span>${feedback.customerEmail}</span>
+                                                </div>
+                                                <div class="feedback-header-right">
+                                                    <label>Vote: </label>
+                                                    <span class="fa fa-star ${feedback.vote >= 1 ? 'checked' : ''}" id="star-1"></span>
+                                                    <span class="fa fa-star ${feedback.vote >= 2 ? 'checked' : ''}" id="star-2"></span>
+                                                    <span class="fa fa-star ${feedback.vote >= 3 ? 'checked' : ''}" id="star-3"></span>
+                                                    <span class="fa fa-star ${feedback.vote >= 4 ? 'checked' : ''}" id="star-4"></span>
+                                                    <span class="fa fa-star ${feedback.vote >= 5 ? 'checked' : ''}" id="star-5"></span>
+                                                    <p>Create date : ${feedback.createDate}</p>
+                                                </div>
+                                            </div>
+                                            <div class="feedback-body">
+                                                <label for="content">Content:</label>
+                                                <textarea class="form-control" id="content" disabled>${feedback.content}</textarea>
+                                            </div>
+                                        </div>
+                                    </c:forEach>
+                                    </div>
+            </div>
+        </div>
+        <!-- End Doctor Details -->
 
         <!-- Footer Area -->
         <footer id="footer" class="footer ">
@@ -234,7 +327,13 @@
             <!--/ End Copyright -->
         </footer>
         <!--/ End Footer Area -->
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+        <!-- jquery Min JS -->
+        <script src="${pageContext.request.contextPath}/Main Template/js/jquery.min.js"></script>
+        <!-- jquery Migrate JS -->
+        <script src="${pageContext.request.contextPath}/Main Template/js/jquery-migrate-3.0.0.js"></script>
+        <!-- jquery Ui JS -->
+        <script src="${pageContext.request.contextPath}/Main Template/js/jquery-ui.min.js"></script>
         <!-- Easing JS -->
         <script src="${pageContext.request.contextPath}/Main Template/js/easing.js"></script>
         <!-- Color JS -->
@@ -269,8 +368,5 @@
         <script src="${pageContext.request.contextPath}/Main Template/js/bootstrap.min.js"></script>
         <!-- Main JS -->
         <script src="${pageContext.request.contextPath}/Main Template/js/main.js"></script>
-        <!-- Include DataTables JS -->
-        <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/2.0.1/js/dataTables.min.js"></script>
     </body>
 </html>
-

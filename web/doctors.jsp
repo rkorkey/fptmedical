@@ -1,5 +1,7 @@
 <!doctype html>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <html class="no-js" lang="zxx">
     <head>
         <!-- Meta Tags -->
@@ -57,68 +59,166 @@
         <!--<link rel="stylesheet" href="${pageContext.request.contextPath}/Main Template/css/color/color11.css">-->
         <!--<link rel="stylesheet" href="${pageContext.request.contextPath}/Main Template/css/color/color12.css">-->
 
-        <!-- Include DataTables CSS -->
-        <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/2.0.1/css/dataTables.dataTables.min.css">
-
-
         <link rel="stylesheet" href="#" id="colors">
-        <script>
-            window.onload = function () {
-                var table = $('#myTable').DataTable();
-                var jsonString = document.getElementById("schedules").value;
-                var schedules = JSON.parse(jsonString);
-                console.log(schedules);
-                var updateDoctorScheduleStatusEndpoint = document.getElementById("updateDoctorScheduleStatus").value;
-                for (var i = 0; i < schedules.length; i++) {
-                    var approveForm = '<form method="POST" action="' + updateDoctorScheduleStatusEndpoint + '">' +
-                            '<input type="hidden" name="id" value="' + schedules[i].id + '" />' +
-                            '<input type="hidden" value="2" name="status" />' +
-                            '<button class="btn btn-success" type="submit">Approve</button>' +
-                            '</form>';
-                    var cancelForm = '<form method="POST" action="' + updateDoctorScheduleStatusEndpoint + '">' +
-                            '<input type="hidden" name="id" value="' + schedules[i].id + '" />' +
-                            '<input type="hidden" value="1" name="status" />' +
-                            '<button class="btn btn-success" type="submit">Cancel</button>' +
-                            '</form>';
-                    table.row.add([
-                        schedules[i].doctor.name,
-                        schedules[i].startDate, 
-                        schedules[i].endDate,
-                        schedules[i].status === 0 ? 'PENDING' : schedules[i].status === 1 ? 'CANCELED' : 'APPROVED',
-                        schedules[i].status === 0 ? approveForm + cancelForm : ''
-                    ]).draw();
-                }
-            };
-        </script>
         <style>
-            #team{
+            #paging{
+                margin-top: 5px;
                 display: flex;
+                justify-content: center;
+            }
+            #paging a {
+                display: inline-block;
+                padding: 8px 16px;
+                margin: 0 4px;
+                border: 1px solid #ccc;
+                border-radius: 4px;
+                text-decoration: none;
+                color: #333;
+                background-color: #fff;
+                transition: all 0.3s ease;
             }
 
-            #myTable_wrapper{
-                left : 10%;
+            #paging a:hover {
+                background-color: #f0f0f0;
+                border-color: #aaa;
             }
 
-            #myTable{
-                width: 80vw;
+            .active {
+                background-color: #007bff !important;
+                color: #fff !important;
+                border-color: #007bff !important;
             }
 
+            .avatar {
+                width: 100%; /* Adjust size as needed */
+                height: 200px; /* Adjust size as needed */
+                border: 2px solid #fff; /* Add a border */
+                box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Add a shadow */
+                object-fit: fill;
+            }
+
+            .threedot{
+                font-size: 26px;
+                color: #888;
+                font-weight: bold;
+                text-decoration: none;
+                margin-left: 5px;
+                margin-right: 5px;
+                margin-top: 2px;
+            }
+            /* Search container */
+            .search-container {
+                position: relative;
+                display: inline-block;
+            }
+
+            /* Search input field */
+            .search-input {
+                width: 300px;
+                padding: 10px;
+                border: 1px solid #ccc;
+                border-radius: 25px;
+                outline: none;
+                font-size: 16px;
+            }
+
+            /* Search button */
+            .search-button {
+                position: absolute;
+                top: 0;
+                right: 0;
+                background-color: #007bff;
+                border: none;
+                padding: 7px;
+                cursor: pointer;
+                transition: background-color 0.3s ease;
+            }
+
+            .search-button:hover {
+                background-color: #0056b3;
+            }
+
+            /* Icon inside the button */
+            .search-button i {
+                color: #fff;
+                font-size: 18px;
+            }
         </style>
+        <script>
+            var gap = 2;
+            function paging(url) {
+                var currentPage = parseInt($("#curentPage").val());
+                var totalPage = $("#totalPage").val();
+                var query = $("#query").val();
+
+                if (totalPage <= 1) {
+                    return;
+                }
+
+                $("#paging").append(
+                        `<a id=1 href=${url}`
+                        + "?pageNumber=0" + "&query=" + query + "> 1 </a>"
+                        );
+
+                if (currentPage - gap - 1 > 1) {
+                    $("#paging").append(
+                            " <span class='threedot'> ... </span>"
+                            );
+                }
+
+                for (let i = currentPage - gap; i <= currentPage; i++) {
+                    if (i > 1) {
+                        $("#paging").append(
+                                `<a id=` + i + ` href=${url}`
+                                + "?pageNumber=" + (i - 1) + "&query=" + query + " >" + i + "</a>"
+                                );
+                    }
+                }
+
+                for (let i = currentPage + 1; i <= currentPage + gap; i++) {
+                    if (i < totalPage) {
+                        $("#paging").append(
+                                "<a id= " + i + ` href=${url}`
+                                + "?pageNumber=" + (i - 1) + "&query=" + query + ">" + i + "</a>"
+                                );
+                    }
+                }
+                if (currentPage + gap < (totalPage - 1)) {
+                    $("#paging").append(
+                            "<span class='threedot'> ... </span>");
+                }
+                if (currentPage == totalPage)
+                    return;
+                $("#paging").append(
+                        "<a id='" + totalPage + `' href=${url}`
+                        + "?pageNumber=" + (totalPage - 1) + "&query=" + query + ">" + totalPage + "</a>"
+                        );
+            }
+
+            function activePage() {
+                var currentPage = parseInt($("#curentPage").val());
+
+                $("#" + currentPage).addClass('active');
+            }
+        </script>
     </head>
-    <body>
-        <%@include file="header.jsp" %>
-        <input  type="hidden" value="${pageContext.request.contextPath}/updateDoctorScheduleStatus" id="updateDoctorScheduleStatus" />
+    <body onload="paging('${pageContext.request.contextPath}/doctors');
+            activePage()">
+        <input type="hidden" id="curentPage" value="${requestScope.pageNumber + 1}">
+        <input type="hidden" id="totalPage" value="${requestScope.totalPage}">
+
+        <jsp:include page="header.jsp" />
         <!-- Breadcrumbs -->
         <div class="breadcrumbs overlay">
             <div class="container">
                 <div class="bread-inner">
                     <div class="row">
                         <div class="col-12">
-                            <h2>Doctor Schedule</h2>
+                            <h2>Meet Our Qualified Doctors</h2>
                             <ul class="bread-list">
                                 <li><a href="${pageContext.request.contextPath}/HomeServlet">Home</a></li>
                                 <li><i class="icofont-simple-right"></i></li>
-                                <li class="active">Doctor Schedule</li>
+                                <li class="active">Doctors</li>
                             </ul>
                         </div>
                     </div>
@@ -129,23 +229,72 @@
 
         <!-- Start Team -->
         <section id="team" class="team section single-page">
-            <input type="hidden" value='${requestScope.schedules}' id="schedules"/>
-            <table id="myTable">
-                <thead>
-                    <tr>
-                        <th>Doctor</th>
-                        <th>Start Time</th>
-                        <th>End Time</th>
-                        <th>Status</th>
-                        <th>Action</th>
-                    </tr>
-                </thead>
-                <tbody>
-
-                </tbody>
-            </table>
+            <div class="container">
+                <div class="search-container row">
+                    <form action="${pageContext.request.contextPath}/doctors?pageNumber=${requestScope.pageNumber}" method="GET">
+                        <input type="text" id="query" placeholder="Search by doctor's name or major..." class="search-input" value="${query}" name="query">
+                        <button type="submit" class="search-button">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </form>
+                </div>
+                <div class="row">
+                    <fmt:setLocale value="vi_VN" />
+                    <fmt:setBundle basename="java.text.resources.LocaleElements"/>
+                    <c:forEach items="${doctors}" var="doctor">
+                        <div class="col-lg-4 col-md-6 col-12">
+                            <!-- Single Team -->
+                            <div class="single-team">
+                                <div class="t-head">
+                                    <img src="${doctor.avatar}" class="avatar" alt="${doctor.doctorName}">
+                                    <div class="t-icon">
+                                        <a href="${pageContext.request.contextPath}/appointment?doctorId=${doctor.doctorId}&majorId=${doctor.majorId}" class="btn">Get Appointment</a>
+                                    </div>
+                                </div>
+                                <div class="t-bottom">
+                                    <p>${doctor.major}</p>
+                                    <h2><a href="${pageContext.request.contextPath}/doctorDetails?doctorId=${doctor.doctorId}">${doctor.doctorName}</a></h2>
+                                    <p>Price</p>
+                                    <h4><fmt:formatNumber type="currency" value="${requestScope.defaultPrice}" currencyCode="VND" /> </h4>
+                                </div>
+                            </div>
+                            <!-- End Single Team -->
+                        </div>	
+                    </c:forEach>
+                </div>
+                <div id="paging" class="row">
+                </div>
+            </div>
         </section>
         <!--/ End Team -->
+
+        <!-- Start Newsletter Area -->
+        <section class="newsletter section">
+            <div class="container">
+                <div class="row ">
+                    <div class="col-lg-6  col-12">
+                        <!-- Start Newsletter Form -->
+                        <div class="subscribe-text ">
+                            <h6>Sign up for newsletter</h6>
+                            <p class="">Cu qui soleat partiendo urbanitas. Eum aperiri indoctum eu,<br> homero alterum.</p>
+                        </div>
+                        <!-- End Newsletter Form -->
+                    </div>
+                    <div class="col-lg-6  col-12">
+                        <!-- Start Newsletter Form -->
+                        <div class="subscribe-form ">
+                            <form action="mail/mail.php" method="get" target="_blank" class="newsletter-inner">
+                                <input name="EMAIL" placeholder="Your email address" class="common-input" onfocus="this.placeholder = ''"
+                                       onblur="this.placeholder = 'Your email address'" required="" type="email">
+                                <button class="btn">Subscribe</button>
+                            </form>
+                        </div>
+                        <!-- End Newsletter Form -->
+                    </div>
+                </div>
+            </div>
+        </section>
+        <!-- /End Newsletter Area -->
 
         <!-- Footer Area -->
         <footer id="footer" class="footer ">
@@ -225,7 +374,7 @@
                     <div class="row">
                         <div class="col-lg-12 col-md-12 col-12">
                             <div class="copyright-content">
-                                <p>© Copyright 2018  |  All Rights Reserved by <a href="https://www.wpthemesgrid.com" target="_blank">wpthemesgrid.com</a> </p>
+                                <p>Â© Copyright 2018  |  All Rights Reserved by <a href="https://www.wpthemesgrid.com" target="_blank">wpthemesgrid.com</a> </p>
                             </div>
                         </div>
                     </div>
@@ -234,7 +383,13 @@
             <!--/ End Copyright -->
         </footer>
         <!--/ End Footer Area -->
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+        <!-- jquery Min JS -->
+        <script src="${pageContext.request.contextPath}/Main Template/js/jquery.min.js"></script>
+        <!-- jquery Migrate JS -->
+        <script src="${pageContext.request.contextPath}/Main Template/js/jquery-migrate-3.0.0.js"></script>
+        <!-- jquery Ui JS -->
+        <script src="${pageContext.request.contextPath}/Main Template/js/jquery-ui.min.js"></script>
         <!-- Easing JS -->
         <script src="${pageContext.request.contextPath}/Main Template/js/easing.js"></script>
         <!-- Color JS -->
@@ -269,8 +424,5 @@
         <script src="${pageContext.request.contextPath}/Main Template/js/bootstrap.min.js"></script>
         <!-- Main JS -->
         <script src="${pageContext.request.contextPath}/Main Template/js/main.js"></script>
-        <!-- Include DataTables JS -->
-        <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/2.0.1/js/dataTables.min.js"></script>
     </body>
 </html>
-
