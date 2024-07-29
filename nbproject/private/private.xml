@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project-private xmlns="http://www.netbeans.org/ns/project-private/1">
+    <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
+    <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
+        <group name="PRJ301">
+            <file>file:/D:/SWP391_Folder/SWP391/src/java/controller/RegisterServlet.java</file>
+            <file>file:/D:/SWP391_Folder/SWP391/src/java/entity/DayOfWeek.java</file>
+            <file>file:/D:/SWP391_Folder/SWP391/web/Main%20Template/support.jsp</file>
+            <file>file:/D:/SWP391_Folder/SWP391/web/Main%20Template/edit-one-time-table.jsp</file>
+            <file>file:/D:/SWP391_Folder/SWP391/web/Main%20Template/support/support.js</file>
+            <file>file:/D:/SWP391_Folder/SWP391/src/java/controller/UpdateProfileServlet.java</file>
+            <file>file:/D:/SWP391_Folder/SWP391/src/java/dal/UserDAO.java</file>
+            <file>file:/D:/SWP391_Folder/SWP391/src/java/controller/ProfileServlet.java</file>
+            <file>file:/D:/SWP391_Folder/SWP391/src/java/dal/TimeSessionDAO.java</file>
+            <file>file:/D:/SWP391_Folder/SWP391/src/java/entity/TimeManagement.java</file>
+            <file>file:/D:/SWP391_Folder/SWP391/web/Main%20Template/edit-time-table.jsp</file>
+            <file>file:/D:/SWP391_Folder/SWP391/src/java/controller/LogOutServlet.java</file>
+            <file>file:/D:/SWP391_Folder/SWP391/src/java/dal/DayOfWeekDAO.java</file>
+            <file>file:/D:/SWP391_Folder/SWP391/src/java/controller/TimeSessionServlet.java</file>
+            <file>file:/D:/SWP391_Folder/SWP391/web/Main%20Template/profile.jsp</file>
+            <file>file:/D:/SWP391_Folder/SWP391/src/java/controller/LoginServlet.java</file>
+            <file>file:/D:/SWP391_Folder/SWP391/web/Main%20Template/index.jsp</file>
+            <file>file:/D:/SWP391_Folder/SWP391/web/WEB-INF/web.xml</file>
+            <file>file:/D:/SWP391_Folder/SWP391/src/java/bo/UserLogic.java</file>
+            <file>file:/D:/SWP391_Folder/SWP391/web/Main%20Template/css/support.css</file>
+        </group>
+        <group>
+            <file>file:/D:/Documents/FPT%20University/Ki%205%20-%20SP24/SWP391/FMec-mainNEW/FMec-main/src/java/dal/BookingDAO.java</file>
+            <file>file:/D:/Documents/FPT%20University/Ki%205%20-%20SP24/SWP391/FMec-mainNEW/FMec-main/src/java/controller/UpdateBlogServlet.java</file>
+            <file>file:/D:/Documents/FPT%20University/Ki%205%20-%20SP24/SWP391/FMec-mainNEW/FMec-main/web/Main%20Template/appointment.jsp</file>
+            <file>file:/D:/Documents/FPT%20University/Ki%205%20-%20SP24/SWP391/FMec-mainNEW/FMec-main/web/Main%20Template/bookingDetail.jsp</file>
+            <file>file:/D:/Documents/FPT%20University/Ki%205%20-%20SP24/SWP391/FMec-mainNEW/FMec-main/web/Blog.jsp</file>
+            <file>file:/D:/Documents/FPT%20University/Ki%205%20-%20SP24/SWP391/FMec-mainNEW/FMec-main/web/Main%20Template/blogDetail.jsp</file>
+            <file>file:/D:/Documents/FPT%20University/Ki%205%20-%20SP24/SWP391/FMec-mainNEW/FMec-main/web/Main%20Template/faq.html</file>
+            <file>file:/D:/Documents/FPT%20University/Ki%205%20-%20SP24/SWP391/FMec-mainNEW/FMec-main/web/Main%20Template/profile.jsp</file>
+            <file>file:/D:/Documents/FPT%20University/Ki%205%20-%20SP24/SWP391/FMec-mainNEW/FMec-main/src/java/dal/BlogDAO.java</file>
+            <file>file:/D:/Documents/FPT%20University/Ki%205%20-%20SP24/SWP391/FMec-mainNEW/FMec-main/web/Main%20Template/header.jsp</file>
+            <file>file:/D:/Documents/FPT%20University/Ki%205%20-%20SP24/SWP391/FMec-mainNEW/FMec-main/src/java/Enums/StatusEnum.java</file>
+            <file>file:/D:/Documents/FPT%20University/Ki%205%20-%20SP24/SWP391/FMec-mainNEW/FMec-main/src/java/dal/NotificationDAO.java</file>
+            <file>file:/D:/Documents/FPT%20University/Ki%205%20-%20SP24/SWP391/FMec-mainNEW/FMec-main/src/java/controller/BlogDetailController.java</file>
+            <file>file:/D:/Documents/FPT%20University/Ki%205%20-%20SP24/SWP391/FMec-mainNEW/FMec-main/src/java/controller/booking/UpdateBookingStatusController.java</file>
+            <file>file:/D:/Documents/FPT%20University/Ki%205%20-%20SP24/SWP391/FMec-mainNEW/FMec-main/web/Main%20Template/support.jsp</file>
+            <file>file:/D:/Documents/FPT%20University/Ki%205%20-%20SP24/SWP391/FMec-mainNEW/FMec-main/src/java/dal/TimeConfigDAO.java</file>
+            <file>file:/D:/Documents/FPT%20University/Ki%205%20-%20SP24/SWP391/FMec-mainNEW/FMec-main/src/java/controller/BlogServlet.java</file>
+            <file>file:/D:/Documents/FPT%20University/Ki%205%20-%20SP24/SWP391/FMec-mainNEW/FMec-main/src/java/controller/admin/UpdateDoctorScheduleStatusController.java</file>
+            <file>file:/D:/Documents/FPT%20University/Ki%205%20-%20SP24/SWP391/FMec-mainNEW/FMec-main/src/java/controller/BlogListController.java</file>
+            <file>file:/D:/Documents/FPT%20University/Ki%205%20-%20SP24/SWP391/FMec-mainNEW/FMec-main/web/Main%20Template/support/support.js</file>
+            <file>file:/D:/Documents/FPT%20University/Ki%205%20-%20SP24/SWP391/FMec-mainNEW/FMec-main/web/META-INF/context.xml</file>
+            <file>file:/D:/Documents/FPT%20University/Ki%205%20-%20SP24/SWP391/FMec-mainNEW/FMec-main/web/Main%20Template/admin-appointment.jsp</file>
+            <file>file:/D:/Documents/FPT%20University/Ki%205%20-%20SP24/SWP391/FMec-mainNEW/FMec-main/src/java/dal/DBContext.java</file>
+            <file>file:/D:/Documents/FPT%20University/Ki%205%20-%20SP24/SWP391/FMec-mainNEW/FMec-main/src/java/controller/booking/DoctorEndExaminingController.java</file>
+            <file>file:/D:/Documents/FPT%20University/Ki%205%20-%20SP24/SWP391/FMec-mainNEW/FMec-main/web/showBlog.jsp</file>
+            <file>file:/D:/Documents/FPT%20University/Ki%205%20-%20SP24/SWP391/FMec-mainNEW/FMec-main/src/java/controller/timetableregistration/TimeTableRegistrationController.java</file>
+            <file>file:/D:/Documents/FPT%20University/Ki%205%20-%20SP24/SWP391/FMec-mainNEW/FMec-main/web/WEB-INF/web.xml</file>
+            <file>file:/D:/Documents/FPT%20University/Ki%205%20-%20SP24/SWP391/FMec-mainNEW/FMec-main/src/java/controller/booking/BookingDetailController.java</file>
+            <file>file:/D:/Documents/FPT%20University/Ki%205%20-%20SP24/SWP391/FMec-mainNEW/FMec-main/src/java/entity/Blog.java</file>
+            <file>file:/D:/Documents/FPT%20University/Ki%205%20-%20SP24/SWP391/FMec-mainNEW/FMec-main/src/java/controller/booking/DoctorStartExaminingController.java</file>
+            <file>file:/D:/Documents/FPT%20University/Ki%205%20-%20SP24/SWP391/FMec-mainNEW/FMec-main/src/java/controller/ShowBlogServlet.java</file>
+            <file>file:/D:/Documents/FPT%20University/Ki%205%20-%20SP24/SWP391/FMec-mainNEW/FMec-main/nbproject/build-impl.xml</file>
+            <file>file:/D:/Documents/FPT%20University/Ki%205%20-%20SP24/SWP391/FMec-mainNEW/FMec-main/web/Main%20Template/blogs.jsp</file>
+            <file>file:/D:/Documents/FPT%20University/Ki%205%20-%20SP24/SWP391/FMec-mainNEW/FMec-main/src/java/controller/booking/MyAppointMentController.java</file>
+            <file>file:/D:/Documents/FPT%20University/Ki%205%20-%20SP24/SWP391/FMec-mainNEW/FMec-main/src/java/controller/admin/AdminViewAppointmentController.java</file>
+        </group>
+    </open-files>
+</project-private>

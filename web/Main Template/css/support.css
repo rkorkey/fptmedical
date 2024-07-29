@@ -1,0 +1,114 @@
+* {
+    font-family: "Poppins", sans-serif;
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+}
+
+section {
+    margin: 0 auto;
+    max-width: 1440px;
+    width: 100%;
+}
+
+.view {
+    display: flex;
+/*    justify-content: flex-end;  Để chat box ở góc phải dưới */
+}
+
+.body {
+    width: 100%;
+    background-color: #c1d5f8;
+    padding: 20px;
+}
+
+.chat {
+    display: flex;
+    gap: 10px;
+    padding: 15px;
+    color: #5a5a5a;
+    font-size: 14px;
+    font-weight: 400;
+    align-items: center;
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    margin-bottom: 10px;
+}
+
+.chat img {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+}
+
+.messagebar {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    height: 60px;
+    width: 100%;
+    background-color: #fff;
+    box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
+    display: flex;
+    align-items: center;
+    padding: 0 20px;
+}
+
+.bar-wrapper {
+    border-radius: 30px;
+    width: 100%;
+    background-color: #f0f0f0;
+    padding: 0 15px;
+    display: flex;
+    align-items: center;
+}
+
+.bar-wrapper input {
+    flex: 1;
+    padding: 10px;
+    border: none;
+    background: none;
+    color: #5a5a5a;
+}
+
+.bar-wrapper input::placeholder {
+    color: #9e9e9e;
+}
+
+.messagebar button {
+    background-color: #21b8f9;
+    border: none;
+    border-radius: 50%;
+    padding: 10px;
+    margin-left: 10px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.messagebar button:hover {
+    background-color: #1a87c5;
+}
+
+.message-bar-icon {
+    font-size: 24px; /* Kích thước icon gửi */
+    color: #fff;
+}
+
+.message-box {
+    height: calc(100vh - 100px); /* Chiều cao phụ thuộc vào chiều cao của messagebar và header */
+    overflow-y: auto;
+    padding: 0 20px;
+}
+
+/* Thêm vào cuối file để đảm bảo button send hiển thị đúng */
+.material-symbols-rounded {
+    font-variant: normal;
+    text-transform: none;
+    display: inline-block;
+    line-height: 1;
+    text-rendering: auto;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    font-family: 'Material Icons Rounded';
+}
